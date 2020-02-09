@@ -19,7 +19,6 @@
 
   <!-- 구글폰트 -->
   <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
-  <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
 
   <script>
     function openclose() {
@@ -31,8 +30,65 @@
         $('#btn-posting-box').text('포스팅 박스 닫기')
       }
     }
+
+    $(document).ready(function(){
+      $('#cards-box').html('');
+      listing();
+    });
+
+    function listing() {
+      $.ajax({
+        type: "GET",
+        url: "http://spartacodingclub.shop/post",
+        data: {},
+        success: function(response){
+           let articles = response['articles'];
+           for (let i = 0; i < articles.length; i++) {
+             make_card(articles[i]['comment'],articles[i]['desc'],articles[i]['image'],articles[i]['title'],articles[i]['url'])
+           }
+        }
+      })
+    }
+
+    function make_card(comment, desc, image, title, url) {
+      let temp_html = '<div class="card">\
+        <img class="card-img-top" src="'+image+'" alt="Card image cap">\
+        <div class="card-body">\
+          <a href="'+url+'" class="card-title">'+title+'</a>\
+          <p class="card-text">'+desc+'</p>\
+          <p class="card-text comment">'+comment+'</p>\
+        </div>\
+      </div>';
+      $('#cards-box').append(temp_html);
+    }
   </script>
 
+  <!-- style -->
+  <style type="text/css">
+    * {
+      font-family: 'Stylish', sans-serif;
+    }
+    .wrap {
+      width: 900px;
+      margin: auto;
+    }
+    .comment {
+      color: blue;
+      font-weight: bold;
+    }
+    .form-post {
+      max-width: 500px;
+      padding: 2rem;
+      margin: 2rem auto;
+      border-color: #e9ecef;
+      border-radius: 0.3rem;
+      border: solid;
+      display: block;
+    }
+    #posting-box {
+      display: none;
+    }
+  </style>
 
 </head>
 <body>
